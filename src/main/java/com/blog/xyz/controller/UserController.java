@@ -28,12 +28,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/addUsers")
-    public void addUsers(@RequestBody @Valid UserRequest userRequest){
-        Users user = objectMapper.convertValue(userRequest, Users.class);
-        Users savedUser = userService.addUser(user);
-    }
-
     @GetMapping("/getAllUsers")
     public List<UserResponse> getAllUser(){
         List<UserResponse> allUsers = null;

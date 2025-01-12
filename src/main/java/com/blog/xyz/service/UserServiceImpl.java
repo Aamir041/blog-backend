@@ -1,5 +1,6 @@
 package com.blog.xyz.service;
 
+import com.blog.xyz.dtos.UserRequest;
 import com.blog.xyz.dtos.UserResponse;
 import com.blog.xyz.dtos.UserUpdateRequest;
 import com.blog.xyz.dtos.Users;
@@ -36,8 +37,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users addUser(Users user) {
+    public Users addUser(UserRequest userRequest) {
         try{
+            Users user = objectMapper.convertValue(userRequest, Users.class);
             Users users = userRepository.findByUsername(user.getUsername());
             if(users != null){
                 throw new ServiceException("User Already Exist");
