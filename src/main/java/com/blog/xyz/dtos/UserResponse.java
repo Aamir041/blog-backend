@@ -1,18 +1,17 @@
 package com.blog.xyz.dtos;
 
-import com.blog.xyz.annotation.NotNull;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+
 import java.util.Date;
 
+@ToString
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserResponse {
     private Integer uid;
     private String username;

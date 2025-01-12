@@ -1,6 +1,7 @@
 package com.blog.xyz.controller;
 
 import com.blog.xyz.dtos.UserResponse;
+import com.blog.xyz.dtos.UserUpdateRequest;
 import com.blog.xyz.dtos.Users;
 import com.blog.xyz.dtos.UserRequest;
 import com.blog.xyz.service.UserService;
@@ -27,12 +28,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/addUsers")
-    public void addUsers(@RequestBody @Valid UserRequest userRequest){
-        Users user = objectMapper.convertValue(userRequest, Users.class);
-        Users savedUser = userService.addUser(user);
-    }
-
     @GetMapping("/getAllUsers")
     public List<UserResponse> getAllUser(){
         List<UserResponse> allUsers = null;
@@ -47,5 +42,25 @@ public class UserController {
         return allUsers;
     }
 
+    @GetMapping("/{username}")
+    public UserResponse getUserByUsername(@PathVariable String username){
+        return userService.getUserByUsername(username);
+    }
+
+    @GetMapping
+    public UserResponse getUserByUid(@RequestParam Integer id){
+        return userService.getUserByUid(id);
+    }
+
+    @PutMapping
+    public UserResponse updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
+        UserResponse updatedUser = userService.updateUserRequest(userUpdateRequest);
+        return updatedUser;
+    }
+
+    @DeleteMapping
+    public void deleteUser(@RequestParam Integer id){
+        userService.deleteUserById(id);
+    }
 
 }
