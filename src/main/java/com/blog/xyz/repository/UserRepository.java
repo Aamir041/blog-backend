@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<Users, Integer> {
     @Query("SELECT new com.blog.xyz.dtos.UserResponse(u.uid, u.username, u.bio, u.birthdate) FROM Users AS u")
-    List<UserResponse> findAllusers();
-
-    @Query("SELECT new com.blog.xyz.dtos.UserResponse(u.uid, u.username, u.bio, u.birthdate) FROM Users AS u WHERE u.username = :username")
-    UserResponse findUserByUsername(String username);
+    List<UserResponse> findAllUsers();
 
     @Query("SELECT new com.blog.xyz.dtos.UserResponse(u.uid, u.username, u.bio, u.birthdate) FROM Users AS u WHERE u.uid = :uid")
     UserResponse findUserByUid(Integer uid);
+
+    Users findByUsername(String username);
 }
