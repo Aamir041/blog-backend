@@ -1,9 +1,6 @@
 package com.blog.xyz.service;
 
-import com.blog.xyz.dtos.UserRequest;
-import com.blog.xyz.dtos.UserResponse;
-import com.blog.xyz.dtos.UserUpdateRequest;
-import com.blog.xyz.dtos.Users;
+import com.blog.xyz.dtos.*;
 import com.blog.xyz.exception.ServiceException;
 import com.blog.xyz.repository.UserRepository;
 import com.blog.xyz.util.PasswordUtil;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +42,7 @@ public class UserServiceImpl implements UserService {
             if(users != null){
                 throw new ServiceException("User Already Exist");
             }
+            user.setRole(new Role(2, "USER", "User role"));
             user.setPassword(passwordUtil.hashPassword(user.getPassword()));
             log.info("Adding User : {}", user);
             Users savedUser = userRepository.save(user);
@@ -59,8 +58,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> getAllUsers() {
         try{
-            List<UserResponse> users = userRepository.findAllUsers()    ;
-            return users;
+            List<Users> users = userRepository.findAll();
+            List<UserResponse> usersResonse = new ArrayList<>();
+            for(Users user : users){
+                usersResonse.add(objectMapper.convertValue(user, UserResponse.class));
+            }
+            return usersResonse;
         }
         catch (Exception exception){
             log.error("Error while getting all the user: {}", exception.getMessage());
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserByUid(Integer id) {
         try{
-            UserResponse user = userRepository.findUserByUid(id);
+            UserResponse user = objectMapper.convertValue(userRepository.findUserByUid(id), UserResponse.class);
             return user;
         }
         catch (Exception exception){

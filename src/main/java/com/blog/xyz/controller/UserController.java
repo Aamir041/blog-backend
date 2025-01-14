@@ -1,5 +1,6 @@
 package com.blog.xyz.controller;
 
+import com.blog.xyz.annotation.RequiredRole;
 import com.blog.xyz.dtos.UserResponse;
 import com.blog.xyz.dtos.UserUpdateRequest;
 import com.blog.xyz.dtos.Users;
@@ -8,8 +9,10 @@ import com.blog.xyz.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +23,13 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
-    private ObjectMapper objectMapper;
 
     @Autowired
-    public UserController(UserService userService, ObjectMapper objectMapper){
-        this.objectMapper = objectMapper;
+    public UserController(UserService userService){
         this.userService = userService;
     }
 
+    @RequiredRole("ROLE_ADMIN")
     @GetMapping("/getAllUsers")
     public List<UserResponse> getAllUser(){
         List<UserResponse> allUsers = null;

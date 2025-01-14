@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,4 +34,7 @@ public class Users {
 
     @Column()
     private Date birthdate;
+
+    @OneToOne
+    private Role role;
 }

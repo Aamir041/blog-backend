@@ -17,4 +17,5 @@ public class UserResponse {
     private String username;
     private String bio;
     private Date birthdate;
+    private Role role;
 }

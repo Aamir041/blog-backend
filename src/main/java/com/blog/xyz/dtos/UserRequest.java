@@ -11,7 +11,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-@JsonIgnoreProperties
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest {
     @NotNull(message = "Username cannot be null")
     private String username;
