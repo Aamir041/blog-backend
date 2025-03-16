@@ -36,7 +36,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(requests -> {
             requests
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/**","/health").permitAll()
                     .anyRequest().authenticated();
 
         }).sessionManagement(sessionManagement -> {

@@ -1,5 +1,6 @@
 package com.blog.xyz.controller;
 
+import com.blog.xyz.dtos.LoginRequest;
 import com.blog.xyz.dtos.UserRequest;
 import com.blog.xyz.dtos.Users;
 import com.blog.xyz.repository.UserRepository;
@@ -14,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/auth")
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private UserService userService;
@@ -37,10 +38,10 @@ public class AuthController {
         Users savedUser = userService.addUser(userRequest);
     }
 
-    @GetMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password){
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

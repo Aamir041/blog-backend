@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@RequestMapping("/users")
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
@@ -29,8 +29,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequiredRole("ROLE_ADMIN")
-    @GetMapping("/getAllUsers")
+    @GetMapping("/all")
     public List<UserResponse> getAllUser(){
         List<UserResponse> allUsers = null;
         try{
@@ -44,25 +43,23 @@ public class UserController {
         return allUsers;
     }
 
-    @GetMapping("/{username}")
-    public UserResponse getUserByUsername(@PathVariable String username){
-        return userService.getUserByUsername(username);
+    @GetMapping("/{uid}")
+    public UserResponse getUserByUid(@PathVariable Integer uid){
+        return userService.getUserByUid(uid);
     }
 
-    @GetMapping
-    public UserResponse getUserByUid(@RequestParam Integer id){
-        return userService.getUserByUid(id);
-    }
-
+    @RequiredRole("ROLE_ADMIN")
     @PutMapping
     public UserResponse updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
         UserResponse updatedUser = userService.updateUserRequest(userUpdateRequest);
         return updatedUser;
     }
 
+    @RequiredRole("ROLE_ADMIN")
     @DeleteMapping
     public void deleteUser(@RequestParam Integer id){
         userService.deleteUserById(id);
     }
 
 }
+

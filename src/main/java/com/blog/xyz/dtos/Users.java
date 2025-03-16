@@ -36,5 +36,6 @@ public class Users {
     private Date birthdate;
 
     @OneToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 }

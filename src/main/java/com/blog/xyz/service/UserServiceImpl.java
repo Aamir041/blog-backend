@@ -84,9 +84,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserByUid(Integer id) {
+    public UserResponse getUserByUid(Integer uid) {
         try{
-            UserResponse user = objectMapper.convertValue(userRepository.findUserByUid(id), UserResponse.class);
+            UserResponse user = objectMapper.convertValue(userRepository.findUserByUid(uid), UserResponse.class);
             return user;
         }
         catch (Exception exception){
@@ -100,10 +100,10 @@ public class UserServiceImpl implements UserService {
         try{
             Users user = userRepository.findByUsername(updatedUser.getUsername());
 
-            if(!updatedUser.getBio().equals(user.getBio())){
+            if(updatedUser.getBio() != null && !updatedUser.getBio().equals(user.getBio())){
                 user.setBio(updatedUser.getBio());
             }
-            if(!updatedUser.getBirthdate().equals(user.getBirthdate())){
+            if(updatedUser.getBirthdate() != null && !updatedUser.getBirthdate().equals(user.getBirthdate())){
                 user.setBirthdate(updatedUser.getBirthdate());
             }
             UserResponse userResponse = objectMapper.convertValue(userRepository.save(user), UserResponse.class);
