@@ -32,7 +32,7 @@ public class JwtUtils {
     /*
     * This method gives the info about jwt so that we can extract from it
     * */
-    public Claims getClaimsFromToken(String token) {
+    public static Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(generalKey())
                 .build()
@@ -49,7 +49,7 @@ public class JwtUtils {
         }
     }
 
-    public String getUsernameFromToken(String token) {
+    public static String getUsernameFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
     }
 
