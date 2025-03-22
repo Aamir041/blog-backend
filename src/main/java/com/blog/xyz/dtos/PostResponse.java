@@ -21,4 +21,5 @@ public class PostResponse {
     private String category;
     private Date publicationDate;
     private String tags;
+    private String author;
 }

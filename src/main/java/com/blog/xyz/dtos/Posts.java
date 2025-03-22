@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,5 +35,8 @@ public class Posts {
 
     @Column()
     private String tags;
+
+    @Column()
+    private String author;
 }
 

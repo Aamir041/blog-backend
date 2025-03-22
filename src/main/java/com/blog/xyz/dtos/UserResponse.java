@@ -16,6 +16,6 @@ public class UserResponse {
     private Integer uid;
     private String username;
     private String bio;
-    private Date birthdate;
+    private String birthdate;
     private Role role;
 }

@@ -5,13 +5,16 @@ import com.blog.xyz.exception.ServiceException;
 import com.blog.xyz.repository.UserRepository;
 import com.blog.xyz.util.PasswordUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,8 +89,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserByUid(Integer uid) {
         try{
-            UserResponse user = objectMapper.convertValue(userRepository.findUserByUid(uid), UserResponse.class);
-            return user;
+            Users user = userRepository.findUserByUid(uid);
+            UserResponse userResponse = formatUserResponse(user);
+            return userResponse;
         }
         catch (Exception exception){
             log.error("Exception occured while getting user by id {}", exception.getMessage());
@@ -106,7 +110,9 @@ public class UserServiceImpl implements UserService {
             if(updatedUser.getBirthdate() != null && !updatedUser.getBirthdate().equals(user.getBirthdate())){
                 user.setBirthdate(updatedUser.getBirthdate());
             }
-            UserResponse userResponse = objectMapper.convertValue(userRepository.save(user), UserResponse.class);
+
+            Users savedUser = userRepository.save(user);
+            UserResponse userResponse = formatUserResponse(savedUser);
             return userResponse;
         }
         catch (Exception exception){
@@ -131,6 +137,20 @@ public class UserServiceImpl implements UserService {
         catch (Exception exception){
             throw exception;
         }
+    }
+
+    private UserResponse formatUserResponse (Users user){
+        UserResponse userResponse = objectMapper.convertValue(user, UserResponse.class);
+        if(null != user.getBirthdate()){
+            String usersBirthDate = getUserBirthDate(user.getBirthdate());
+            userResponse.setBirthdate(usersBirthDate);
+        }
+        return userResponse;
+    }
+
+    private String getUserBirthDate(Date birthDate){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return simpleDateFormat.format(birthDate);
     }
 
 }
