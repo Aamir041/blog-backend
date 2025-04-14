@@ -11,4 +11,5 @@ public class PostRequest {
     private String content;
     private String category;
     private String tags;
+    private String author;
 }

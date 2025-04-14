@@ -1,6 +1,7 @@
 package com.blog.xyz.dtos;
 
 import com.blog.xyz.annotation.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "posts")
 public class Posts {
     @Id
@@ -37,6 +39,6 @@ public class Posts {
     private String tags;
 
     @Column()
-    private String author;
+    private Integer authorid;
 }
 
