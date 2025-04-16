@@ -2,6 +2,7 @@ package com.blog.xyz.controller;
 
 import com.blog.xyz.dtos.LoginRequest;
 import com.blog.xyz.dtos.UserRequest;
+import com.blog.xyz.dtos.UserResponse;
 import com.blog.xyz.dtos.Users;
 import com.blog.xyz.repository.UserRepository;
 import com.blog.xyz.service.UserService;
@@ -34,8 +35,9 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public void addUsers(@RequestBody @Valid UserRequest userRequest){
-        Users savedUser = userService.addUser(userRequest);
+    public UserResponse addUsers(@RequestBody @Valid UserRequest userRequest){
+        UserResponse user = userService.addUser(userRequest);
+        return user;
     }
 
     @PostMapping("/login")

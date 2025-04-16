@@ -3,16 +3,10 @@ package com.blog.xyz.controller;
 import com.blog.xyz.annotation.RequiredRole;
 import com.blog.xyz.dtos.UserResponse;
 import com.blog.xyz.dtos.UserUpdateRequest;
-import com.blog.xyz.dtos.Users;
-import com.blog.xyz.dtos.UserRequest;
+import com.blog.xyz.dtos.UserDeleteResponse;
 import com.blog.xyz.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +40,12 @@ public class UserController {
     @GetMapping("/{uid}")
     public UserResponse getUserByUid(@PathVariable Integer uid){
         return userService.getUserByUid(uid);
+    }
+
+    @DeleteMapping("/delete/{username}")
+    public UserDeleteResponse deleteUserByUsername(@PathVariable String username){
+
+        return userService.deleteUserByUsername(username);
     }
 
     @RequiredRole("ROLE_ADMIN")

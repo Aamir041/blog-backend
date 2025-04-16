@@ -1,22 +1,18 @@
 package com.blog.xyz.service;
 
 import com.blog.xyz.dtos.*;
+import com.blog.xyz.dtos.UserDeleteResponse;
 import com.blog.xyz.exception.ServiceException;
+import com.blog.xyz.publisher.UserDeleteEventPublisher;
 import com.blog.xyz.repository.UserRepository;
 import com.blog.xyz.util.PasswordUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -25,20 +21,23 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private PasswordUtil passwordUtil;
     private ObjectMapper objectMapper;
+    private UserDeleteEventPublisher userDeleteEventPublisher;
 
     @Autowired
     public UserServiceImpl(
             UserRepository userRepository,
             PasswordUtil passwordUtil,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            UserDeleteEventPublisher userDeleteEventPublisher
     ){
         this.userRepository = userRepository;
         this.passwordUtil = passwordUtil;
         this.objectMapper = objectMapper;
+        this.userDeleteEventPublisher = userDeleteEventPublisher;
     }
 
     @Override
-    public Users addUser(UserRequest userRequest) {
+    public UserResponse addUser(UserRequest userRequest) {
         try{
             Users user = objectMapper.convertValue(userRequest, Users.class);
             Users users = userRepository.findByUsername(user.getUsername());
@@ -50,7 +49,8 @@ public class UserServiceImpl implements UserService {
             log.info("Adding User : {}", user);
             Users savedUser = userRepository.save(user);
             log.info("User saved with uid : {}",user.getUid());
-            return savedUser;
+            UserResponse userResponse = objectMapper.convertValue(savedUser, UserResponse.class);
+            return userResponse;
         }
         catch (ServiceException serviceException){
             log.error("Error while saving user : {}", serviceException.getMessage());
@@ -133,6 +133,31 @@ public class UserServiceImpl implements UserService {
         }
         catch (ServiceException serviceException){
             throw  serviceException;
+        }
+        catch (Exception exception){
+            throw exception;
+        }
+    }
+
+    @Override
+    public UserDeleteResponse deleteUserByUsername(String username){
+        try{
+            Users user = userRepository.findByUsername(username);
+            if(user == null){
+                log.error("User {} does not exist", username);
+                throw new ServiceException("User " + username +" does not exist.");
+            }
+            String transactionId = UUID.randomUUID().toString();
+
+            UserDeleteResponse  userDeleteResponse = new UserDeleteResponse();
+            userDeleteResponse.setTransactionId(transactionId);
+
+            userDeleteEventPublisher.publishDeleteEvent(transactionId, user.getUid());
+
+            return userDeleteResponse;
+        }
+        catch (ServiceException serviceException){
+            throw serviceException;
         }
         catch (Exception exception){
             throw exception;
